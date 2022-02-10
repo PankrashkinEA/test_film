@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\FilmRequest;
+use App\Http\Resources\FilmResource;
+use App\Models\Film;
 
 class FilmController extends Controller
 {
@@ -13,17 +15,9 @@ class FilmController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        dd(request()->all());
+        $films = Film::with('actors')->get();
+        return response(FilmResource::collection($films));
     }
 
     /**
@@ -32,9 +26,17 @@ class FilmController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FilmRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        if($validated->fails()){
+            return response()->json($validated->errors());
+        }
+
+        $film = Film::create(request()->all());
+
+        return response()->json(['New film created', new FilmResource($film)]);
     }
 
     /**
@@ -45,18 +47,11 @@ class FilmController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $film = Film::find($id);
+        if (is_null($film)) {
+            return response()->json('not found', 404);
+        }
+        return response()->json([new FilmResource($film)]);
     }
 
     /**
@@ -66,9 +61,21 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(FilmRequest $request, Film $film)
     {
-        //
+        $validated = $request->validated();
+
+        if($validated->fails()){
+            return response()->json($validated->errors());
+        }
+
+        $film->title = $request->title;
+        $film->description = $request->description;
+        $film->genre_id = $request->genre_id;
+        $film->year = $request->year;
+        $film->save();
+
+        return response()->json(['Film updated.', new FilmResource($film)]);
     }
 
     /**
@@ -77,8 +84,9 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Film $film)
     {
-        //
+        $film->delete();
+        response()->json('film deleted', 204);
     }
 }

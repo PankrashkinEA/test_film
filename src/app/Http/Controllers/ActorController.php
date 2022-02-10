@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ActorRequest;
+use App\Http\Resources\ActorResource;
 use Illuminate\Http\Request;
+use App\Models\Actor;
 
 class ActorController extends Controller
 {
@@ -13,17 +16,8 @@ class ActorController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $actors = Actor::with('films')->get();
+        return response(ActorResource::collection($actors));
     }
 
     /**
@@ -32,9 +26,19 @@ class ActorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ActorRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        if($validated->fails()){
+            return response()->json($validated->errors());
+        }
+
+        $film = Actor::create([
+            'name' => $request->name
+        ]);
+
+        return response()->json(['New actor created', new ActorResource($film)]);
     }
 
     /**
@@ -45,7 +49,11 @@ class ActorController extends Controller
      */
     public function show($id)
     {
-        //
+        $actor = Actor::find($id);
+        if (is_null($actor)) {
+            return response()->json('not found', 404);
+        }
+        return response()->json([new ActorResource($actor)]);
     }
 
     /**
@@ -77,8 +85,9 @@ class ActorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Actor $actor)
     {
-        //
+        $actor->delete();
+        response()->json('actor deleted', 204);
     }
 }

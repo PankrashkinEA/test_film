@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GenreResource;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 
 class GenreController extends Controller
@@ -13,17 +15,8 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $genres = Genre::with('films')->get();
+        return response(GenreResource::collection($genres));
     }
 
     /**
@@ -32,9 +25,19 @@ class GenreController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GenreRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        if($validated->fails()){
+            return response()->json($validated->errors());
+        }
+
+        $film = Genre::create([
+            'name' => $request->name
+        ]);
+
+        return response()->json(['New actor created', new GenreResource($film)]);
     }
 
     /**
@@ -45,18 +48,11 @@ class GenreController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $genre = Genre::find($id);
+        if (is_null($genre)) {
+            return response()->json('not found', 404);
+        }
+        return response()->json([new GenreResource($genre)]);
     }
 
     /**
@@ -77,8 +73,9 @@ class GenreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Genre $genre)
     {
-        //
+        $genre->delete();
+        response()->json('genre deleted', 204);
     }
 }
