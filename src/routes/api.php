@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::resource('/films', App\Http\Controllers\FilmController::class);
+Route::resource('/actors', App\Http\Controllers\ActorController::class);
+Route::resource('/genres', App\Http\Controllers\GenreController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+

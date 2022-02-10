@@ -15,7 +15,6 @@ class FilmController extends Controller
      */
     public function index()
     {
-        dd(request()->all());
         $films = Film::with('actors')->get();
         return response(FilmResource::collection($films));
     }

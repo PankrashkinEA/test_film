@@ -21,7 +21,7 @@ class MainSeeder extends Seeder
         Actor::factory(10)->create();
         Genre::factory(3)->create();
         Film::factory(10)->create();
-        ActorFilm::factory(50)->create();
+        ActorFilm::factory(20)->create();
 
     }
 }
