@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Genre extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+
+    public function films()
+    {
+        return $this->hasOne(Film::class);
+    }
 }

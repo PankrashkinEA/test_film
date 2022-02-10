@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Actor extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+
+    public function films()
+    {
+        return $this->belongsToMany(Film::class);
+    }
 }

@@ -10,4 +10,5 @@ class ActorFilm extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $table = 'actor_film';
 }
