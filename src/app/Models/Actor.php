@@ -10,6 +10,7 @@ class Actor extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $fillable = ['name'];
 
     public function films()
     {

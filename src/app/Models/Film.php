@@ -10,6 +10,7 @@ class Film extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $fillable = ['genre_id','title','description','year'];
 
     public function actors()
     {
@@ -20,4 +21,5 @@ class Film extends Model
     {
         return $this->belongsTo(Genre::class);
     }
+
 }
