@@ -18,10 +18,12 @@ class MainSeeder extends Seeder
      */
     public function run()
     {
-        Actor::factory(10)->create();
-        Genre::factory(3)->create();
-        Film::factory(10)->create();
-        ActorFilm::factory(20)->create();
+        $this->call([
+            ActorSeeder::class,
+            ActorSeeder::class,
+            FilmSeeder::class,
+            GenreSeeder::class
+        ]);
 
     }
 }
