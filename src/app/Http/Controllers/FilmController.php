@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\FilmRequest;
+use App\Filters\ActorFilter;
 use App\Http\Resources\FilmResource;
 use App\Models\Film;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class FilmController extends Controller
@@ -15,11 +16,16 @@ class FilmController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(QueryBuilder $builder)
-    {
 
-        $films = Film::with('actors')->get();
-        return response(FilmResource::collection($films));
+    public function index()
+    {
+        $result = QueryBuilder::for(Film::class)
+            ->allowedSorts('title')
+            ->allowedFilters([
+                'genre_id',
+                AllowedFilter::custom('actors', new ActorFilter())])
+            ->get();
+        return response(FilmResource::collection($result));
     }
 
     /**
