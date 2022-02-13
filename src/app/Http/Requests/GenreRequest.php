@@ -24,7 +24,7 @@ class GenreRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string|max:255'
         ];
     }
 }
