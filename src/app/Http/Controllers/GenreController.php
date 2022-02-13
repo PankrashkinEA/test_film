@@ -25,19 +25,10 @@ class GenreController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(GenreRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-
-        if($validated->fails()){
-            return response()->json($validated->errors());
-        }
-
-        $film = Genre::create([
-            'name' => $request->name
-        ]);
-
-        return response()->json(['New actor created', new GenreResource($film)]);
+        $genre = Genre::create(request()->all());
+        return response()->json(['New genre created', new GenreResource($genre)],200);
     }
 
     /**
@@ -62,9 +53,10 @@ class GenreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Genre $genre)
     {
-        //
+        $genre->update(request()->all());
+        return response()->json(['Genre updated.', new GenreResource($genre)],200);
     }
 
     /**

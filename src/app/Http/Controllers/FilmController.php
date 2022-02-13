@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FilmRequest;
 use App\Http\Resources\FilmResource;
 use App\Models\Film;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class FilmController extends Controller
 {
@@ -13,8 +15,9 @@ class FilmController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(QueryBuilder $builder)
     {
+
         $films = Film::with('actors')->get();
         return response(FilmResource::collection($films));
     }
@@ -25,17 +28,10 @@ class FilmController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FilmRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-
-        if($validated->fails()){
-            return response()->json($validated->errors());
-        }
-
         $film = Film::create(request()->all());
-
-        return response()->json(['New film created', new FilmResource($film)]);
+        return response()->json(['New film created', new FilmResource($film)],200);
     }
 
     /**
@@ -50,7 +46,7 @@ class FilmController extends Controller
         if (is_null($film)) {
             return response()->json('not found', 404);
         }
-        return response()->json([new FilmResource($film)]);
+        return response()->json([new FilmResource($film)],200);
     }
 
     /**
@@ -60,21 +56,10 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FilmRequest $request, Film $film)
+    public function update(Request $request, Film $film)
     {
-        $validated = $request->validated();
-
-        if($validated->fails()){
-            return response()->json($validated->errors());
-        }
-
-        $film->title = $request->title;
-        $film->description = $request->description;
-        $film->genre_id = $request->genre_id;
-        $film->year = $request->year;
-        $film->save();
-
-        return response()->json(['Film updated.', new FilmResource($film)]);
+        $film->update(request()->all());
+        return response()->json(['Film updated.', new FilmResource($film)],200);
     }
 
     /**
@@ -86,6 +71,6 @@ class FilmController extends Controller
     public function destroy(Film $film)
     {
         $film->delete();
-        response()->json('film deleted', 204);
+        response()->json('film deleted', 200);
     }
 }

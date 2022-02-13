@@ -28,17 +28,8 @@ class ActorController extends Controller
      */
     public function store(ActorRequest $request)
     {
-        $validated = $request->validated();
-
-        if($validated->fails()){
-            return response()->json($validated->errors());
-        }
-
-        $film = Actor::create([
-            'name' => $request->name
-        ]);
-
-        return response()->json(['New actor created', new ActorResource($film)]);
+        $actor = Actor::create(request()->all());
+        return response()->json(['New actor created', new ActorResource($actor)],200);
     }
 
     /**
@@ -57,26 +48,16 @@ class ActorController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Actor $actor)
     {
-        //
+        $actor->update(request()->all());
+        return response()->json(['Actor updated.', new ActorResource($actor)],200);
     }
 
     /**
