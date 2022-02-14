@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Filters\ActorFilter;
+use App\Http\Requests\FilmRequest;
 use App\Http\Resources\FilmResource;
 use App\Models\Film;
-use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -34,8 +34,10 @@ class FilmController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FilmRequest $request)
     {
+        $validated = $request->validated();
+
         $film = Film::create(request()->all());
         return response()->json(['New film created', new FilmResource($film)],200);
     }
@@ -62,8 +64,9 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Film $film)
+    public function update(FilmRequest $request, Film $film)
     {
+        $validated = $request->validated();
         $film->update(request()->all());
         return response()->json(['Film updated.', new FilmResource($film)],200);
     }

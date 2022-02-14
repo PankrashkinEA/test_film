@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ActorRequest;
 use App\Http\Resources\ActorResource;
-use Illuminate\Http\Request;
 use App\Models\Actor;
 
 class ActorController extends Controller
@@ -28,6 +27,7 @@ class ActorController extends Controller
      */
     public function store(ActorRequest $request)
     {
+        $validated = $request->validated();
         $actor = Actor::create(request()->all());
         return response()->json(['New actor created', new ActorResource($actor)],200);
     }
@@ -54,8 +54,9 @@ class ActorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Actor $actor)
+    public function update(ActorRequest $request, Actor $actor)
     {
+        $validated = $request->validated();
         $actor->update(request()->all());
         return response()->json(['Actor updated.', new ActorResource($actor)],200);
     }

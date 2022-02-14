@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GenreRequest;
 use App\Http\Resources\GenreResource;
 use App\Models\Genre;
-use Illuminate\Http\Request;
 
 class GenreController extends Controller
 {
@@ -25,8 +25,9 @@ class GenreController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GenreRequest $request)
     {
+        $validated = $request->validated();
         $genre = Genre::create(request()->all());
         return response()->json(['New genre created', new GenreResource($genre)],200);
     }
@@ -53,8 +54,9 @@ class GenreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Genre $genre)
+    public function update(GenreRequest $request, Genre $genre)
     {
+        $validated = $request->validated();
         $genre->update(request()->all());
         return response()->json(['Genre updated.', new GenreResource($genre)],200);
     }
