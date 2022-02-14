@@ -15,7 +15,6 @@ class ActorFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
-            // 'fields' => $this->faker->text(),
         ];
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Actor;
-use App\Models\FilmActor;
 use App\Models\Genre;
 use Illuminate\Http\Resources\Json\JsonResource;
 

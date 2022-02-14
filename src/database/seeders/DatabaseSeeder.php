@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Film;
-use App\Models\FilmActor;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
